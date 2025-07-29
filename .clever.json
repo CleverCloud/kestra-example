@@ -1,0 +1,12 @@
+{
+  "apps": [
+    {
+      "app_id": "app_224be0bf-2645-4a8e-ba73-9236e4246bd0",
+      "org_id": "orga_3c5034a1-9ab9-43e5-b305-1ce60a225440",
+      "deploy_url": "https://push-n3-par-clevercloud-customers.services.clever-cloud.com/app_224be0bf-2645-4a8e-ba73-9236e4246bd0.git",
+      "git_ssh_url": "git+ssh://git@push-n3-par-clevercloud-customers.services.clever-cloud.com/app_224be0bf-2645-4a8e-ba73-9236e4246bd0.git",
+      "name": "kestra-001",
+      "alias": "kestra-001"
+    }
+  ]
+}
