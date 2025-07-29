@@ -1,6 +1,0 @@
-[tools]
-node = "22"
-
-[tasks.run]
-description = "Start the application"
-run = "/opt/openjdk-bin-23.0.2_p7/bin/java -jar $APP_HOME/kestra run --config config.yml"

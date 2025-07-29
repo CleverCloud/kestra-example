@@ -1,0 +1,6 @@
+#!/usr/bin/env bash
+#MISE description="Run the app"
+
+export KESTRA_PLUGINS_PATH=$APP_HOME/kestra-install/plugins
+/opt/openjdk-bin-23.0.2_p7/bin/java -jar $APP_HOME/kestra plugins list
+/opt/openjdk-bin-23.0.2_p7/bin/java -jar $APP_HOME/kestra server standalone --config $APP_HOME/config.yml

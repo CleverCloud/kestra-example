@@ -30,42 +30,79 @@ Before starting the deployment process, you'll need to decide on:
 You'll use these values throughout the deployment process. In the commands below, replace:
 - `<APP_NAME>` with your chosen application name
 - `<YOUR_DOMAIN_NAME>` with your domain name (if applicable)
-
-### Architecture Overview
-
-Kestra consists of several core components that work together:
-
-- **Executor**: Manages the execution lifecycle of data workflows
-- **Scheduler**: Initiates workflows based on trigger events
-- **Worker**: Executes individual tasks within a flow
-- **Indexer**: (Optional) Enhances data retrieval by indexing workflow metadata
-- **Webserver**: Provides the UI and API access for workflow management
+- `<USERNAME>` with your chosen username for Kestra authentication
+- `<PASSWORD>` with your chosen password for Kestra authentication
 
 ## Important Notes
 
-- **Database Requirements**: Kestra requires a PostgreSQL database for storing workflow metadata and execution history. For production environments, XS plan or larger is strongly recommended.
-- **Storage Requirements**: Kestra needs persistent storage for workflow files, logs, and temporary data. A filesystem bucket is required.
+Kestra offers many configuration options and customization. There are three main components that need to be configured during the initial setup:
+
+### Core Configuration Components
+
+- **Internal Storage**: Used for storing workflow files, execution logs, and temporary data
+  - *This deployment uses*: **Clever Cloud Cellar** (S3-compatible storage)
+  
+- **Queue**: Manages task execution queuing and coordination between Kestra components
+  - *This deployment uses*: **Clever Cloud PostgreSQL** instance
+  
+- **Repository**: Stores workflow definitions, metadata, and execution history
+  - *This deployment uses*: **Clever Cloud PostgreSQL** instance (same as Queue)
+
+### Deployment Considerations
+
+- **Database Requirements**: PostgreSQL database serves both Queue and Repository functions. For production environments, XS plan or larger is strongly recommended.
+- **Storage Requirements**: Cellar (S3-compatible) storage handles internal file storage, logs, and temporary data.
 - **Memory Requirements**: Kestra is a Java-based application that requires adequate memory allocation. Consider using at least S plan for production workloads.
 - **Scaling**: The configuration provided is suitable for small to medium workloads. For higher demands, consider upgrading your database and application plans.
 
 ### User Authentication
 
-Kestra provides built-in user management and authentication:
+Kestra community edition uses basic authentication configured through environment variables:
 
-1. **First-time setup**:
-   - When you first access your Kestra instance, you'll be prompted to create an admin account
-   - Follow the on-screen instructions to set up your username, email, and password
+1. **Authentication Setup**:
+   - Basic authentication is enabled in the configuration with credentials set via environment variables
+   - The username and password are configured using `BASIC_AUTH_USERNAME` and `BASIC_AUTH_PASSWORD` environment variables
+   - These credentials are set during deployment using the values you specify for `<USERNAME>` and `<PASSWORD>`
 
-2. **Managing users**:
-   - After initial setup, you can manage additional users through the Kestra UI
-   - Navigate to Administration > Users to add or modify user accounts
+2. **Accessing Kestra**:
+   - When you access your Kestra instance, you'll be prompted for the username and password
+   - Use the credentials you configured during the deployment process
+
+## Deployment Steps
+
+### Using Clever Tools CLI
+
+Follow these steps to deploy Kestra on Clever Cloud using the command line:
+
+```bash
+# Step 1: Create a Linux application
+clever create --type linux <APP_NAME> 
+
+# Step 2: Create required add-ons
+# - PostgreSQL database for workflow storage (minimum XXS plan required, XS or higher recommended)
+clever addon create postgresql-addon --plan xxs_sml <APP_NAME>-pg
+clever addon create cellar-addon <APP_NAME>-s3
+
+# Step 3: Link add-ons to your application
+clever service link-addon <APP_NAME>-pg
+clever service link-addon <APP_NAME>-s3
+
+# Step 4: Configure environment variables
+eval "$(clever env -F shell)"
+export CC_DOMAIN=`clever domain`
+
+clever env set BASIC_AUTH_USERNAME <USERNAME>
+clever env set BASIC_AUTH_PASSWORD <PASSWORD>
+
+# Step 5: Deploy your application
+clever deploy
+```
 
 ## Post-Deployment
 
 1. Once deployed, access your Kestra instance at `https://<YOUR_DOMAIN_NAME>/`
-2. Complete the initial setup wizard to create your admin account
-3. Explore the tutorial flows and start creating your own workflows!
-4. Check out the extensive plugin library with 600+ available integrations
+2. Explore the tutorial flows and start creating your own workflows!
+3. Check out the extensive plugin library with 600+ available integrations
 
 ## Troubleshooting
 

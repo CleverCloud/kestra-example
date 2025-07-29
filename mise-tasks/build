@@ -17,5 +17,8 @@ for file in $(ls $APP_HOME/kestra-install/*); do
 done
 ln -sf $KESTRA_EXEC $APP_HOME/kestra
 
+export KESTRA_PLUGINS_PATH=$APP_HOME/kestra-install/plugins
+mkdir -p $KESTRA_PLUGINS_PATH
+
 # Install S3 storage plugin
-$APP_HOME/kestra plugins install io.kestra.storage:storage-s3:LATEST
+/opt/openjdk-bin-23.0.2_p7/bin/java -jar $APP_HOME/kestra plugins install io.kestra.storage:storage-s3:LATEST
