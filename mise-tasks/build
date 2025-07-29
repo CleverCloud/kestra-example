@@ -1,0 +1,21 @@
+#!/usr/bin/env bash
+#MISE description="Build the app"
+
+mkdir -p $APP_HOME/kestra-install
+wget https://api.kestra.io/v1/versions/download -O $APP_HOME/kestra-install/kestra.zip
+unzip $APP_HOME/kestra-install/kestra.zip -d $APP_HOME/kestra-install
+rm -f $APP_HOME/kestra-install/kestra.zip
+
+# The zip contains a single file, an executable jar without jar extension.
+# We need to find this file and store it in the KESTRA_DIR variable.
+# The problem is that the file name depends on the version, e.g. kestra-0.23.8
+for file in $(ls $APP_HOME/kestra-install/*); do
+    if [[ -f $file ]]; then
+        KESTRA_EXEC="$file"
+        break
+    fi
+done
+ln -sf $KESTRA_EXEC $APP_HOME/kestra
+
+# Install S3 storage plugin
+$APP_HOME/kestra plugins install io.kestra.storage:storage-s3:LATEST

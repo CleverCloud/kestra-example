@@ -1,0 +1,6 @@
+[tools]
+node = "22"
+
+[tasks.run]
+description = "Start the application"
+run = "$APP_HOME/kestra run --config config.yml"
