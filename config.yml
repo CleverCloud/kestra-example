@@ -16,16 +16,24 @@ kestra:
   repository:
     type: postgres
   storage:
-    type: s3
-    s3:
+    type: minio
+    minio:
       endpoint: https://${CELLAR_ADDON_HOST}
+      port: 80
       accessKey: ${CELLAR_ADDON_KEY_ID}
       secretKey:  ${CELLAR_ADDON_KEY_SECRET}
       region: US
-      bucket: kestra-internal-storage
+      bucket: ${BUCKET_NAME}
   tasks:
     tmpDir:
       path: "/tmp/kestra-wd/tmp"
+  # As the Docker engine is not accessible, configure globally the Process runner for all plugins <5>
+  plugins:
+    defaults:
+      - type: io.kestra.plugin.scripts
+        values:
+          taskRunner:
+            type: io.kestra.plugin.core.runner.Process      
 micronaut:
   server:
     port: 8080

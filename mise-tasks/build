@@ -1,5 +1,16 @@
 #!/usr/bin/env bash
 #MISE description="Build the app"
+pip install s3cmd
+cat > ~/.s3cfg << EOF
+[default]
+access_key = $CELLAR_ADDON_KEY_ID
+secret_key = $CELLAR_ADDON_KEY_SECRET
+host_base = $CELLAR_ADDON_HOST
+host_bucket = $CELLAR_ADDON_HOST
+use_https = True
+EOF
+# Create the bucket
+s3cmd mb s3://$BUCKET_NAME
 
 mkdir -p $APP_HOME/kestra-install
 wget https://api.kestra.io/v1/versions/download -O $APP_HOME/kestra-install/kestra.zip
@@ -21,4 +32,4 @@ export KESTRA_PLUGINS_PATH=$APP_HOME/kestra-install/plugins
 mkdir -p $KESTRA_PLUGINS_PATH
 
 # Install S3 storage plugin
-/opt/openjdk-bin-23.0.2_p7/bin/java -jar $APP_HOME/kestra plugins install io.kestra.storage:storage-s3:LATEST
+/opt/openjdk-bin-23.0.2_p7/bin/java -jar $APP_HOME/kestra plugins install io.kestra.storage:storage-minio:LATEST

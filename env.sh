@@ -15,6 +15,10 @@ clever service link-addon $APP_NAME-s3
 eval "$(clever env -F shell)"
 export CC_DOMAIN=`clever domain`
 
+# Bucket name must be unique, let's base it on app name,
+# replacing '_' with '-' to make it valid S3 bucket name
+clever env set BUCKET_NAME $(clever applications -j | jq -r '.[0].app_id' | tr '_' '-')-kestra
+
 clever env set BASIC_AUTH_USERNAME $USERNAME
 clever env set BASIC_AUTH_PASSWORD $PASSWORD
 

@@ -40,7 +40,8 @@ Kestra offers many configuration options and customization. There are three main
 ### Core Configuration Components
 
 - **Internal Storage**: Used for storing workflow files, execution logs, and temporary data
-  - *This deployment uses*: **Clever Cloud Cellar** (S3-compatible storage)
+  - *This deployment uses*: **Clever Cloud Cellar** (S3-compatible storage) configured as MinIO
+  - *Bucket creation*: Automatically handled during the build process using s3cmd
   
 - **Queue**: Manages task execution queuing and coordination between Kestra components
   - *This deployment uses*: **Clever Cloud PostgreSQL** instance
@@ -90,6 +91,9 @@ clever service link-addon <APP_NAME>-s3
 # Step 4: Configure environment variables
 eval "$(clever env -F shell)"
 export CC_DOMAIN=`clever domain`
+
+# Configure S3 bucket name (converts underscores to hyphens for S3 compatibility)
+clever env set BUCKET_NAME $(clever applications -j | jq -r '.[0].app_id' | tr '_' '-')
 
 clever env set BASIC_AUTH_USERNAME <USERNAME>
 clever env set BASIC_AUTH_PASSWORD <PASSWORD>
