@@ -13,7 +13,7 @@ EOF
 s3cmd mb s3://$BUCKET_NAME
 
 mkdir -p $APP_HOME/kestra-install
-wget https://api.kestra.io/v1/versions/download -O $APP_HOME/kestra-install/kestra.zip
+wget -nv https://api.kestra.io/v1/versions/download -O $APP_HOME/kestra-install/kestra.zip
 unzip $APP_HOME/kestra-install/kestra.zip -d $APP_HOME/kestra-install
 rm -f $APP_HOME/kestra-install/kestra.zip
 
