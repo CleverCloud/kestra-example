@@ -1,40 +1,37 @@
 datasources:
-  # Configure Postgres with the env vars from the add-on <1>
+  # Configure Postgres with the env vars from the add-on
   postgres:
     url: jdbc:postgresql://${POSTGRESQL_ADDON_HOST}:${POSTGRESQL_ADDON_PORT}/${POSTGRESQL_ADDON_DB}
     driverClassName: org.postgresql.Driver
     username: ${POSTGRESQL_ADDON_USER}
     password: ${POSTGRESQL_ADDON_PASSWORD}
+    # Keep the pool small enough for the smallest PostgreSQL plans
+    maximum-pool-size: 4
 kestra:
+  url: https://${CC_DOMAIN}/
   server:
-    basicAuth:
-      enabled: true
+    # Basic authentication is mandatory since Kestra 0.24; the username must be an email address
+    basic-auth:
       username: ${BASIC_AUTH_USERNAME}
       password: ${BASIC_AUTH_PASSWORD}
   queue:
     type: postgres
   repository:
     type: postgres
+  # Internal storage on Cellar (S3-compatible) through the MinIO storage plugin
   storage:
     type: minio
     minio:
-      endpoint: https://${CELLAR_ADDON_HOST}
-      port: 80
-      accessKey: ${CELLAR_ADDON_KEY_ID}
-      secretKey:  ${CELLAR_ADDON_KEY_SECRET}
+      endpoint: ${CELLAR_ADDON_HOST}
+      port: 443
+      secure: true
+      access-key: ${CELLAR_ADDON_KEY_ID}
+      secret-key: ${CELLAR_ADDON_KEY_SECRET}
       region: US
       bucket: ${BUCKET_NAME}
   tasks:
-    tmpDir:
+    tmp-dir:
       path: "/tmp/kestra-wd/tmp"
-  # As the Docker engine is not accessible, configure globally the Process runner for all plugins <5>
-  plugins:
-    defaults:
-      - type: io.kestra.plugin.scripts
-        values:
-          taskRunner:
-            type: io.kestra.plugin.core.runner.Process      
 micronaut:
   server:
     port: 8080
-  url: https://${CC_DOMAIN}

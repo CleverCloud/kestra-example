@@ -1,0 +1,9 @@
+[tools]
+# Kestra 2.x is built for and requires Java 25 (LTS)
+java = "temurin-25"
+
+[env]
+# Pinned Kestra release (2.0 LTS line) and its compatible MinIO storage plugin
+KESTRA_VERSION = "2.0.4"
+KESTRA_STORAGE_MINIO_VERSION = "1.2.12"
+KESTRA_PLUGINS_PATH = "{{ env.APP_HOME }}/kestra-install/plugins"

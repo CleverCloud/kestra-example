@@ -1,6 +1,8 @@
 #!/usr/bin/env bash
 #MISE description="Run the app"
+set -euo pipefail
 
-export KESTRA_PLUGINS_PATH=$APP_HOME/kestra-install/plugins
-/opt/openjdk-bin-23.0.2_p7/bin/java -jar $APP_HOME/kestra plugins list
-/opt/openjdk-bin-23.0.2_p7/bin/java -jar $APP_HOME/kestra server standalone --config $APP_HOME/config.yml
+java -jar "$APP_HOME/kestra" plugins list --plugins "$KESTRA_PLUGINS_PATH"
+exec java -jar "$APP_HOME/kestra" server standalone \
+  --plugins "$KESTRA_PLUGINS_PATH" \
+  --config "$APP_HOME/config.yml"
