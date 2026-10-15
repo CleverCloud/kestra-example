@@ -2,7 +2,10 @@
 #MISE description="Run the app"
 set -euo pipefail
 
-java -jar "$APP_HOME/kestra" plugins list --plugins "$KESTRA_PLUGINS_PATH"
-exec java -jar "$APP_HOME/kestra" server standalone \
+# Let the JVM use most of the instance memory (the JVM default is only 25%)
+JAVA_OPTS="${JAVA_OPTS:--XX:MaxRAMPercentage=75}"
+
+java $JAVA_OPTS -jar "$APP_HOME/kestra" plugins list --plugins "$KESTRA_PLUGINS_PATH"
+exec java $JAVA_OPTS -jar "$APP_HOME/kestra" server standalone \
   --plugins "$KESTRA_PLUGINS_PATH" \
   --config "$APP_HOME/config.yml"
