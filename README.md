@@ -1,5 +1,3 @@
-![Clever Cloud logo](./github-assets/clever-cloud-logo.png)
-
 # Deploy Kestra on Clever Cloud
 [![Clever Cloud - PaaS](https://img.shields.io/badge/Clever%20Cloud-PaaS-orange)](https://clever-cloud.com)
 [![Kestra.io - Workflow Orchestration](https://img.shields.io/badge/Kestra.io-Workflow%20Orchestration-blue)](https://kestra.io)
